@@ -4,6 +4,8 @@ namespace App\Providers;
 
 use App\Repositories\CourseRepository as ICourseRepository;
 use App\Repositories\Eloquent\CourseRepository;
+use App\Repositories\Eloquent\InstructorRepository;
+use App\Repositories\InstructorRepository as IInstructorRepository;
 use Illuminate\Support\ServiceProvider;
 
 class AppServiceProvider extends ServiceProvider
@@ -16,6 +18,7 @@ class AppServiceProvider extends ServiceProvider
     public function register()
     {
         $this->app->bind(ICourseRepository::class, CourseRepository::class);
+        $this->app->bind(IInstructorRepository::class, InstructorRepository::class);
     }
 
     /**

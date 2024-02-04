@@ -10,19 +10,22 @@ use Illuminate\Support\Facades\Mail;
 use App\Mail\ContactAdmin;
 use App\Models\Config;
 use App\Repositories\CourseRepository;
+use App\Repositories\InstructorRepository;
 
 class HomeController extends Controller
 {
 
     protected CourseRepository $courseRepository;
+    protected InstructorRepository $instructorRepository;
     /**
      * Create a new controller instance.
      *
      * @return void
      */
-    public function __construct(CourseRepository $courseRepository)
+    public function __construct(CourseRepository $courseRepository, InstructorRepository $instructorRepository)
     {
         $this->courseRepository = $courseRepository;
+        $this->instructorRepository = $instructorRepository;
         // $this->middleware('auth', ['except' => ['checkUserEmailExists']]);
     }
 
@@ -39,13 +42,7 @@ class HomeController extends Controller
 
         $discountTab_courses = $this->courseRepository->getDiscounted();
 
-        $instructors = DB::table('instructors')
-                        ->select('instructors.*')
-                        ->join('users', 'users.id', '=', 'instructors.user_id')
-                        ->where('users.is_active',1)
-                        ->groupBy('instructors.id')
-                        ->limit(8)
-                        ->get();
+        $instructors = $this->instructorRepository->getActice();
                         
         return view('site/home', compact('latestTab_courses', 'freeTab_courses', 'discountTab_courses', 'instructors'));
     }
